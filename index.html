@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="直感で1枚のカードを選ぶだけ。今日のあなたへのメッセージと、整えたい周波数、ヒーリングサプリの音楽が届きます。">
+<meta name="theme-color" content="#100c2a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ツキヨミ">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="TSUKIYOMI ツキヨミ｜魂のリズムを整えるリーディングカード">
+<meta property="og:description" content="直感で1枚のカードを選ぶだけ。今日のあなたへのメッセージと、整えたい周波数が届きます。">
+<meta property="og:image" content="cover.webp">
+<meta property="og:type" content="website">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>TSUKIYOMI ツキヨミ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Shippori+Mincho+B1:wght@400;600;800&display=swap">
+<style>
+/* Layout: 一画面の儀式。紫の星空 → 呼吸 → 5枚の扇 → 1枚がめくれる → 空がラベンダーに灯り、カードの言葉と今日のヒーリングタイムが届く。
+   世界観（紫の宇宙・金の装飾・三日月・羽根・水面の蓮）に統一した単一テーマ。 */
+:root{
+  --night:#100c2a; --violet:#2a1f63; --lav:#b9a3ef; --lav-soft:#d9cdf7; --pink:#f3a9cb;
+  --ink:#f7f1ff; --mist:#cbbfe6; --gold:#ecd08e; --gold-deep:#b48a3c; --veil:rgba(18,13,46,.55);
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --latin:"Cormorant Garamond","Times New Roman",serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--night);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.9;overflow-x:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity 3s ease}
+.sky.base{background:radial-gradient(ellipse 90% 60% at 50% 110%,#4a3591 0%,var(--violet) 40%,var(--night) 80%)}
+.sky.glow{opacity:0;background:radial-gradient(ellipse 80% 55% at 50% 35%,rgba(185,163,239,.45),transparent 70%),
+  radial-gradient(ellipse 120% 50% at 50% 105%,rgba(243,169,203,.35),transparent 70%)}
+body.is-open .sky.glow{opacity:1}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding-block:40px 64px;text-align:center}
+.scene{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px;animation:fadein 1.4s both}
+.scene[hidden]{display:none!important}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--latin);font-style:italic;letter-spacing:.3em;font-size:14px;color:var(--gold)}
+h1{font-weight:800;font-size:clamp(28px,7vw,44px);letter-spacing:.14em;margin:0;line-height:1.4;text-wrap:balance;
+  text-shadow:0 0 26px rgba(236,208,142,.4)}
+.lead{color:var(--mist);margin:0;max-width:26em;font-size:15px}
+.cover{display:block;width:100%;max-width:560px;height:auto;border-radius:18px;margin-top:-16px;
+  box-shadow:0 0 0 1px rgba(236,208,142,.35),0 20px 60px rgba(5,3,20,.6),0 0 80px rgba(185,163,239,.25)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.date{font-family:var(--latin);letter-spacing:.2em;color:var(--mist);font-size:15px}
+
+.breath{width:150px;height:150px;border-radius:50%;position:relative;display:grid;place-items:center;margin:10px 0}
+.breath::before,.breath::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(236,208,142,.6)}
+.breath::before{animation:breathe 8s ease-in-out infinite;background:radial-gradient(circle,rgba(217,205,247,.35),transparent 70%)}
+.breath::after{inset:-18px;border-color:rgba(236,208,142,.2)}
+.breath span{position:relative;font-size:14px;letter-spacing:.3em;color:var(--gold)}
+@keyframes breathe{0%,100%{transform:scale(.72)}45%,55%{transform:scale(1.06)}}
+
+.btn{font-family:var(--display);font-size:16px;letter-spacing:.14em;border-radius:999px;padding:13px 30px;cursor:pointer;
+  border:1px solid var(--gold);background:linear-gradient(180deg,rgba(236,208,142,.18),rgba(236,208,142,.04));color:var(--ink);
+  text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:background .3s,box-shadow .3s}
+.btn:hover{background:rgba(236,208,142,.25);box-shadow:0 0 22px rgba(236,208,142,.4)}
+.btn:focus-visible,.card:focus-visible,.textlink:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.btn.solid{background:linear-gradient(180deg,#f6dea4,var(--gold-deep));color:#241a40;border-color:transparent;font-weight:600}
+.textlink{background:none;border:0;color:var(--mist);font-family:var(--display);font-size:13px;letter-spacing:.15em;cursor:pointer;text-decoration:underline;text-underline-offset:5px}
+
+/* カード（SVG絵柄） */
+.art{position:absolute;inset:0;border-radius:10px;overflow:hidden;backface-visibility:hidden;box-shadow:0 10px 34px rgba(5,3,20,.6)}
+.art svg{display:block;width:100%;height:100%}
+
+.art img{display:block;width:100%;height:100%;object-fit:cover}
+.front img{filter:brightness(.62) saturate(1.1)}
+.fan{position:relative;width:100%;height:clamp(250px,58vw,330px);margin-top:10px}
+.card{--w:clamp(84px,20vw,146px);position:absolute;left:calc(50% - var(--w) / 2);bottom:10px;width:var(--w);aspect-ratio:2/3;max-width:100%;
+  border:0;padding:0;background:none;cursor:default;transform-origin:50% 150%;transition:translate .35s cubic-bezier(.2,.8,.2,1),filter .35s}
+.fan.ready .card{cursor:pointer}
+.fan.ready .card:hover,.fan.ready .card:focus-visible{translate:0 -20px;filter:drop-shadow(0 0 18px rgba(236,208,142,.7))}
+.fan.chosen .card{pointer-events:none}
+.fan.chosen .card.pick{filter:drop-shadow(0 0 30px rgba(236,208,142,.9))}
+.hint{font-size:13px;letter-spacing:.25em;color:var(--gold);min-height:1.6em;transition:opacity .6s}
+/* 光の粒 */
+.spark{position:fixed;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:5;
+  background:radial-gradient(circle,#fff8e4 0 30%,rgba(236,208,142,.8) 45%,transparent 70%)}
+
+.flip{width:clamp(190px,50vw,250px);aspect-ratio:2/3;perspective:1200px;margin-top:6px}
+.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1.6s cubic-bezier(.3,.1,.2,1)}
+.flip.turned .flip-inner{transform:rotateY(180deg)}
+.flip .front{transform:rotateY(180deg)}
+.face-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:16% 10% 0;gap:6px;color:#fff9ef;pointer-events:none}
+.face-text .no{font-family:var(--latin);font-size:12px;letter-spacing:.28em;color:var(--gold)}
+.face-text .nm{font-size:clamp(19px,5vw,24px);font-weight:800;letter-spacing:.16em;line-height:1.5;text-wrap:balance;text-shadow:0 0 14px rgba(185,163,239,.9)}
+
+/* 読み解き */
+.reading{display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;max-width:34em;opacity:0;transition:opacity 1.6s 1.4s}
+.reading.show{opacity:1}
+.reading .card-id{font-family:var(--latin);letter-spacing:.26em;font-size:13px;color:var(--gold)}
+.reading h2{margin:-10px 0 0;font-size:clamp(26px,6.5vw,34px);font-weight:800;letter-spacing:.12em;text-shadow:0 0 20px rgba(185,163,239,.7)}
+.reading .msg{font-size:clamp(17px,4.4vw,20px);font-weight:600;line-height:2.05;margin:0;text-wrap:pretty;max-width:22em}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+@media (max-width:420px){.pair{grid-template-columns:1fr}}
+.cell{padding:16px 14px;border-radius:14px;background:var(--veil);backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgba(236,208,142,.3);min-width:0}
+.cell h3{margin:0 0 4px;font-size:12px;letter-spacing:.22em;color:var(--mist);font-weight:400}
+.cell p{margin:0;font-size:18px;font-weight:600}
+.cell.up p{color:var(--lav-soft)}
+.time{width:100%;padding:20px 18px;border-radius:16px;background:var(--veil);backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 0 1px rgba(236,208,142,.45);display:flex;flex-direction:column;gap:12px}
+.time .ttl{font-size:14px;letter-spacing:.3em;color:var(--gold)}
+.time .pair .cell{background:rgba(255,255,255,.05);box-shadow:none}
+.time .line{margin:0;font-size:15px}
+.cta{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 18px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(243,169,203,.16),rgba(185,163,239,.10));box-shadow:inset 0 0 0 1px rgba(243,169,203,.4)}
+.cta .ttl{font-size:15px;font-weight:600;letter-spacing:.12em}
+.cta .rec{font-size:13px;color:var(--mist)}
+.cta .btn{width:min(100%,340px)}
+.cta .invite{margin:0;font-size:14px;text-align:left}
+.share{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+.toast{font-size:13px;color:var(--gold);min-height:1.5em}
+.note{font-size:11px;color:var(--mist);opacity:.85;margin:0;max-width:34em}
+
+@media (prefers-reduced-motion:reduce){
+  .breath::before{animation:none}.card{animation:none;transition:opacity .3s}.flip-inner{transition:none}
+  .reading{transition:none}.scene{animation:none}.sky{transition:none}}
+</style>
+
+<!-- カードの絵柄パーツ（全カードで共有） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16124a"/><stop offset=".45" stop-color="#2f2378"/><stop offset=".72" stop-color="#5a3fa2"/><stop offset="1" stop-color="#2a1f68"/>
+    </linearGradient>
+    <radialGradient id="gCloud" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c8a8f2" stop-opacity=".75"/><stop offset="1" stop-color="#c8a8f2" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2d6" stop-opacity=".9"/><stop offset=".35" stop-color="#f3d9a0" stop-opacity=".35"/><stop offset="1" stop-color="#f3d9a0" stop-opacity="0"/></radialGradient>
+    <linearGradient id="gMoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6dc"/><stop offset=".6" stop-color="#f0cf86"/><stop offset="1" stop-color="#d8a9e8"/></linearGradient>
+    <linearGradient id="gFeather" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fff4e0"/><stop offset=".45" stop-color="#cdb6f6"/><stop offset=".8" stop-color="#8fa3f0"/><stop offset="1" stop-color="#f4c6e4"/></linearGradient>
+    <linearGradient id="gPetal" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff3e6"/><stop offset=".5" stop-color="#f6b8d6"/><stop offset="1" stop-color="#c9a6f2"/></linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe7b0"/><stop offset=".5" stop-color="#d9ad5c"/><stop offset="1" stop-color="#fbe7b0"/></linearGradient>
+    <mask id="mMoon"><rect width="200" height="300" fill="#fff"/><circle cx="114" cy="92" r="40" fill="#000"/></mask>
+    <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+
+    <symbol id="sSky" viewBox="0 0 200 300">
+      <rect width="200" height="300" fill="url(#gSky)"/>
+      <ellipse cx="30" cy="200" rx="70" ry="30" fill="url(#gCloud)"/>
+      <ellipse cx="175" cy="190" rx="70" ry="34" fill="url(#gCloud)"/>
+      <ellipse cx="100" cy="40" rx="90" ry="40" fill="url(#gCloud)" opacity=".35"/>
+      <g id="starDots"></g>
+    </symbol>
+    <symbol id="sFrame" viewBox="0 0 200 300">
+      <g fill="none" stroke="url(#gGold)">
+        <rect x="7" y="7" width="186" height="286" rx="12" stroke-width="1.4"/>
+        <rect x="11" y="11" width="178" height="278" rx="9" stroke-width=".5" opacity=".7"/>
+        <g stroke-width=".8" stroke-linecap="round">
+          <path d="M16 46 C16 26 26 16 46 16 M22 40 C26 30 30 26 40 22"/>
+          <path d="M184 46 C184 26 174 16 154 16 M178 40 C174 30 170 26 160 22"/>
+          <path d="M16 254 C16 274 26 284 46 284 M22 260 C26 270 30 274 40 278"/>
+          <path d="M184 254 C184 274 174 284 154 284 M178 260 C174 270 170 274 160 278"/>
+          <path d="M80 11 C90 20 110 20 120 11 M100 4 V24 M80 289 C90 280 110 280 120 289 M100 276 V296"/>
+        </g>
+      </g>
+      <g fill="#fbe7b0"><path d="M100 0 L102 7 L100 14 L98 7Z"/><path d="M100 286 L102 293 L100 300 L98 293Z"/></g>
+    </symbol>
+    <symbol id="sMoonFeather" viewBox="0 0 200 300">
+      <circle cx="96" cy="100" r="58" fill="url(#gHalo)"/>
+      <circle cx="96" cy="100" r="44" fill="url(#gMoon)" mask="url(#mMoon)" filter="url(#fGlow)"/>
+      <circle cx="96" cy="100" r="62" fill="none" stroke="#f3d9a0" stroke-width=".4" opacity=".6"/>
+      <path d="M58 196 C80 168 110 140 150 74 C152 104 132 150 92 182 C80 190 68 194 58 196Z" fill="url(#gFeather)" opacity=".92" filter="url(#fGlow)"/>
+      <path d="M58 196 C88 160 118 126 150 74" fill="none" stroke="#fff4e0" stroke-width=".9"/>
+      <path d="M40 130 C70 190 150 200 170 140" fill="none" stroke="#f3d9a0" stroke-width=".5" opacity=".7"/>
+      <path d="M30 150 C80 220 160 200 178 120" fill="none" stroke="#f3d9a0" stroke-width=".35" opacity=".5"/>
+    </symbol>
+    <symbol id="sWaterLotus" viewBox="0 0 200 300">
+      <rect x="0" y="214" width="200" height="86" fill="#1a1550" opacity=".55"/>
+      <g stroke="#f3d9a0" fill="none" opacity=".75">
+        <line x1="20" y1="215" x2="180" y2="215" stroke-width=".5"/>
+        <ellipse cx="100" cy="258" rx="70" ry="10" stroke-width=".4"/>
+        <ellipse cx="100" cy="258" rx="46" ry="6" stroke-width=".5"/>
+      </g>
+      <g fill="#fbe7b0" opacity=".8"><rect x="97" y="216" width="6" height="2"/><rect x="94" y="222" width="12" height="1.5"/><rect x="96" y="229" width="8" height="1.5"/><rect x="92" y="236" width="16" height="1.2"/></g>
+      <circle cx="100" cy="248" r="26" fill="url(#gHalo)"/>
+      <g fill="url(#gPetal)" stroke="#fff4e0" stroke-width=".4" filter="url(#fGlow)">
+        <path d="M100 254 C80 252 66 246 60 240 C74 238 88 242 100 254Z"/>
+        <path d="M100 254 C120 252 134 246 140 240 C126 238 112 242 100 254Z"/>
+        <path d="M100 254 C86 246 76 234 76 224 C88 228 96 240 100 254Z"/>
+        <path d="M100 254 C114 246 124 234 124 224 C112 228 104 240 100 254Z"/>
+        <path d="M100 254 C93 242 92 228 100 216 C108 228 107 242 100 254Z"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="sky base"></div><div class="sky glow"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<main>
+  <section class="scene" id="s-intro">
+    <h1 class="sr">TSUKIYOMI ツキヨミ 魂のリズムを整えるリーディングカードセッション</h1>
+    <img class="cover" src="cover.webp" alt="TSUKIYOMI ツキヨミ｜魂のリズムを整えるリーディングカードセッション">
+    <p class="lead">ゆっくり吸って、ゆっくり吐いて。<br>心が静かになったら、今日のあなたに届くカードを呼んでね。</p>
+    <button class="btn solid" id="call" type="button">カードを呼ぶ</button>
+  </section>
+
+  <section class="scene" id="s-choose" hidden>
+    <div class="eyebrow">Choose One</div>
+    <p class="lead" id="chooseLead">今日のあなたのために、カードを混ぜているよ。<br>深呼吸をしながら、待っていてね。</p>
+    <div class="fan" id="fan"></div>
+    <div class="hint" id="hint" aria-live="polite"></div>
+  </section>
+
+  <section class="scene" id="s-read" hidden>
+    <div class="flip" id="flip">
+      <div class="flip-inner">
+        <div class="art" id="flipBack"></div>
+        <div class="art front" id="flipFront"></div>
+      </div>
+    </div>
+    <div class="reading" id="reading"></div>
+  </section>
+</main>
+
+<script>
+/* ===== 設定：ご自身のYouTube情報に書き換えてください ===== */
+const CHANNEL_NAME = "ヒーリングサプリ";
+const CHANNEL_URL  = "https://www.youtube.com/@nacchannel123";   // 例: "https://www.youtube.com/@xxxx"（空ならYouTube検索）
+// 5つの再生リスト（空ならYouTube検索に飛びます）
+const PLAYLISTS = {
+  morning:   {name:"朝の目覚め・自己信頼",          url:""},
+  cleanse:   {name:"心の浄化・感情の解放",          url:""},
+  selflove:  {name:"自己愛・インナーチャイルド",    url:""},
+  abundance: {name:"豊かさ・願望実現",              url:""},
+  sleep:     {name:"眠る前の潜在意識ヒーリング",    url:""}
+};
+// カードごとに専用の動画を紐づけたいときは、番号: "URL" で追加（例 9:"https://youtu.be/xxxx"）
+const VIDEO_URLS = {};
+/* ============================================================ */
+
+// [カード名, 今日のメッセージ, 乱れやすい周波数, 活性化したい周波数, 時間帯, 視聴時間, 音楽へつなぐ一言, 再生リスト]
+const CARDS = [
+ ["心の静寂","たくさんの声に囲まれる日こそ、まずは静けさに戻ってね。答えは、あなたの内側にちゃんとあるよ。","思考の騒がしさ","静けさ・内なる声","朝の支度前","5分","朝の静けさの中で、心の声を聴いてみて。","morning"],
+ ["手放しの風","握りしめているものを、少しだけ緩めてみて。\n手放した分だけ、新しい風が入ってくるよ。","執着・握りしめ","解放・軽やかさ","眠る前","15分","今日抱えたものを、音楽と一緒に手放して。","sleep"],
+ ["涙の浄化","泣きたい気持ちは弱さじゃないよ。涙は、心をきれいにしてくれる浄化の水。","悲しみの溜めこみ","浄化・感情の解放","夜のひとり時間","15分","感情を無理に抑えず、優しい音に包まれて。","cleanse"],
+ ["心の余白","予定を詰めこみすぎていない？余白があるから、幸せが入ってこられるんだよ。","焦り・詰めこみ","ゆとり・余白","昼食後","10分","午後を始める前に、思考をお休みしよう。","cleanse"],
+ ["怒りの奥の願い","怒りは、本当は大切にしたい何かがあるサイン。その奥の願いを見つけてあげてね。","怒り・イライラ","本音・自己理解","夕方","10分","今日の怒りの奥にある本音に耳を傾けて。","cleanse"],
+ ["比較からの卒業","誰かと比べなくて大丈夫。あなたの花は、あなたのタイミングで咲くよ。","比較・劣等感","自分軸","朝","5分","誰かではなく、自分の人生に意識を戻そう。","morning"],
+ ["許しの光","許すことは、相手のためじゃなく自分を自由にするため。少しずつで大丈夫だよ。","わだかまり・罪悪感","許し・心の自由","眠る前","15分","心に残る重たい感情を優しく見つめて。","sleep"],
+ ["本音の目覚め","「本当はどうしたい？」と自分に聞いてみて。その小さな声が、今日の道しるべ。","我慢・本音の抑えこみ","本音・自己表現","朝","10分","今日の自分が本当に望むことを感じてみて。","morning"],
+ ["安心の居場所","今日は誰かに認めてもらおうと頑張らなくて大丈夫。まずは自分自身の味方になってあげてね。","見捨てられ不安","安心感・自己信頼","眠る前","10〜15分","眠る前は、思考をお休みして潜在意識に優しい言葉を届ける時間。今日も頑張った自分を安心させてあげよう。","sleep"],
+ ["感情の波","気持ちが揺れる日があっても大丈夫。波はいつか、穏やかな凪に戻るよ。","情緒の揺れ","受容・心の安定","昼の休憩","10分","揺れる気持ちを否定せず、心を休ませて。","cleanse"],
+ ["ありのままの私","何かができるから価値があるんじゃないよ。あなたは、存在そのものが尊いの。","自己否定","自己受容","起床後","10分","何も証明しなくても大丈夫。今日の自分を認めて。","selflove"],
+ ["受け取る許可","遠慮しなくていいよ。愛も豊かさも、あなたが受け取っていいものだから。","受け取り下手・遠慮","受容・豊かさ","朝","10分","愛も豊かさも、受け取っていいと自分に許可して。","abundance"],
+ ["小さな私を抱きしめて","心の奥にいる小さなあなたが、ずっと待っていたのは「大丈夫だよ」のひと言。","インナーチャイルドの寂しさ","安心・自己愛","眠る前","20分","幼い頃の自分を優しく抱きしめるように聴いて。","selflove"],
+ ["完璧じゃなくていい","100点じゃなくても、あなたは十分がんばっているよ。今日の自分に花丸をあげてね。","完璧主義","自己肯定","仕事終わり","10分","頑張った自分に「今日も十分」と伝えて。","selflove"],
+ ["自分を最優先に","誰かのためより先に、自分を満たしてあげてね。満ちた器から、優しさはあふれるよ。","自己犠牲","セルフケア・自己尊重","朝","5分","今日の最初の5分を、自分のためだけに使って。","morning"],
+ ["愛される私","頑張らなくても、役に立たなくても、あなたは愛される存在だよ。","愛されない不安","愛され感・安心","眠る前","15分","愛されるために頑張らなくていいと伝えてあげて。","selflove"],
+ ["自分への感謝","今日も一日を生きた自分に、ありがとうを伝えてあげてね。","自分への厳しさ","感謝・自己慈愛","眠る前","10分","今日の自分にありがとうを届けながら聴いて。","sleep"],
+ ["境界線の魔法","嫌なことには「NO」と言っていいよ。境界線は、あなたを守る優しい魔法。","断れない・人疲れ","自分を守る力","朝","5分","自分の気持ちを守る勇気を育てよう。","morning"],
+ ["自分を信じる力","ここまで乗り越えてきたあなたなら、今日もきっと大丈夫。","自信のゆらぎ","自己信頼","朝","10分","自分なら大丈夫。その感覚を心に育てて。","morning"],
+ ["内なる女神","あなたの中には、やわらかくて強い女神がいるよ。今日はその美しさを思い出してね。","自分を雑に扱うくせ","女性性・自己慈愛","入浴後","15分","自分を慈しむ、特別な時間をつくってみて。","selflove"],
+ ["愛の循環","愛は与えるほど巡ってくるもの。受け取ることも、循環の大切な一部だよ。","与えすぎ・受け取れない","愛の循環","朝","10分","愛を与えることも受け取ることも楽しもう。","selflove"],
+ ["期待を手放す","「わかってほしい」を少し緩めると、心がふっと軽くなるよ。","相手への期待・失望","自立・心の平穏","眠る前","15分","相手への期待を緩め、自分の心に戻る時間。","cleanse"],
+ ["言葉の光","あなたのひと言が、誰かの一日を照らすよ。優しい言葉を、自分にもかけてあげてね。","言葉を飲み込むくせ","伝える力・表現","朝","5分","今日、大切な人に伝えたい言葉を感じて。","morning"],
+ ["鏡の気づき","心がざわついた相手は、あなたに大切なことを教えてくれる鏡かもしれないよ。","人へのモヤモヤ","気づき・内観","夜","15分","今日心が反応した出来事を優しく振り返って。","cleanse"],
+ ["優しい距離","近すぎて苦しいなら、少し離れてもいいんだよ。心地よい距離が、愛を守ってくれる。","人間関係の疲れ","心地よい距離感","昼休み","10分","人との距離を見直し、自分の心地よさを確かめて。","cleanse"],
+ ["感謝の種","今日すでにある小さな幸せに気づくと、心に感謝の花が咲くよ。","欠乏感","感謝・満たされ感","朝食後","5分","今日すでにある小さな幸せを見つけよう。","abundance"],
+ ["他人の課題","誰かの機嫌や問題まで背負わなくて大丈夫。それは、あなたの荷物じゃないよ。","背負いすぎ・責任感","自分軸・軽やかさ","仕事終わり","10分","自分以外の責任まで背負わなくていいよ。","cleanse"],
+ ["心を開く勇気","傷つかないように閉じた心を、少しだけ開いてみて。あたたかい光が入ってくるよ。","心の壁・警戒心","信頼・つながり","朝","10分","安心できるつながりを思い浮かべながら聴いて。","selflove"],
+ ["優しさの矛先","誰かに向けたその優しさ、最後は自分にも向けてあげてね。","自分の後回し","自己慈愛","眠る前","15分","今日の優しさを、最後は自分に向けてあげて。","sleep"],
+ ["愛の選択","正しいかどうかより、どうしたら愛を感じられるかで選んでみてね。","正しさへのこだわり","愛・寛容","夕方","10分","正しさよりも、あなたが大切にしたい愛を選んで。","selflove"],
+ ["豊かさの扉","豊かさは、もうあなたのまわりにあふれているよ。気づいた瞬間に扉がひらくの。","不足感","豊かさの受容","起床後","10分","すでにある豊かさを感じながら一日を始めよう。","abundance"],
+ ["小さな一歩","大きく変わらなくていいよ。今日の小さな一歩が、未来をちゃんと動かしていく。","行動へのためらい","行動力・前進","朝の行動前","5分","音楽を聴き終えたら、小さな一歩を踏み出して。","morning"],
+ ["可能性の種","あなたの中には、まだ芽を出していない可能性の種がたくさん眠っているよ。","あきらめ・停滞","可能性・ワクワク","朝","10分","自分の未来にワクワクする時間をつくって。","abundance"],
+ ["お金との調和","お金は怖いものじゃないよ。安心して、少しずつ仲良くなっていこうね。","お金への不安","金運・安心感","眠る前","15分","お金への不安を見つめ、安心できる感覚を育てて。","abundance"],
+ ["願いの再確認","あなたが本当に叶えたい願いは何？心の声を、もう一度聞いてみてね。","願いのぼやけ・迷い","願望の明確さ","朝","10分","心が本当に望む未来を、優しく思い描いて。","abundance"],
+ ["チャンスを受け取る","今日は思いがけないチャンスが届く日。遠慮せず、手を伸ばしてね。","遠慮・受け身","受け取る力・幸運","外出前","5分","今日出会う新しい可能性に心を開いて。","abundance"],
+ ["流れに委ねる","コントロールしようとしなくて大丈夫。流れは、ちゃんと最善へ運んでくれるよ。","焦り・コントロール","ゆだねる力","眠る前","20分","今日はもう頑張らなくていい。心を休ませよう。","sleep"],
+ ["才能の開花","あなたが当たり前にできることは、誰かにとっての光。それが才能だよ。","自分の過小評価","才能・自己表現","仕事前","10分","あなたにしかない魅力や才能を思い出して。","morning"],
+ ["喜びの選択","迷ったら、心が「うれしい」と感じる方を選んでみてね。","義務感・我慢","喜び・ワクワク","昼食後","5分","午後にひとつ、心が喜ぶ選択をしてみよう。","abundance"],
+ ["未来の私から","未来のあなたは、今のあなたに「ありがとう」って笑っているよ。","未来への不安","希望・未来への安心","眠る前","15分","理想の未来を思い浮かべながら、心を緩めて。","abundance"],
+ ["魂の羅針盤","迷ったら、心が温かくなる方へ。魂の羅針盤は、いつもあなたの進む道を指しているよ。","迷い・方向の見失い","魂の指針","起床後","10分","今日の自分が進みたい方向を感じてみて。","morning"],
+ ["宇宙への信頼","今すべての答えがわからなくても大丈夫。宇宙はあなたの味方だよ。","先の見えない不安","信頼・安心","眠る前","20分","すべての答えを今出さなくても大丈夫。","sleep"],
+ ["目覚めのサイン","何度も目にする数字や言葉は、宇宙からの小さなサインかもしれないよ。","気づきの鈍り","直感・気づき","朝","10分","今日の小さな気づきを大切にして。","morning"],
+ ["光と影の統合","影があるから光が輝くの。どんなあなたも、まるごと大切な存在だよ。","自分の嫌な部分への否定","統合・自己受容","眠る前","20分","どんな自分も否定せず、優しく受け入れて。","sleep"],
+ ["直感のささやき","最初にふと浮かんだ感覚を信じてみて。それは魂からのささやきだよ。","考えすぎ","直感力","朝の静かな時間","10分","思考を少し休ませ、内側の感覚に意識を向けて。","morning"],
+ ["魂の休息","何もしない時間は、怠けじゃなくて魂の充電時間だよ。","疲れ・エネルギー切れ","休息・回復","昼寝前","20分","何もしなくていい時間を、自分にプレゼントして。","sleep"],
+ ["シンクロニシティ","今日は偶然がつながる日。ピンときたことに、素直に乗ってみてね。","決めつけ・閉じた心","好奇心・シンクロ","朝","5分","今日出会う出来事を、好奇心を持って楽しんで。","morning"],
+ ["波動の選択","どんな気持ちで過ごすかは、あなたが選べるよ。心地いい波動を選んでね。","ネガティブへの引っぱられ","ご機嫌な波動","昼食後","10分","午後はどんな気持ちで過ごしたいか選んでみて。","cleanse"],
+ ["本来の輝き","誰かのようにならなくていい。あなたらしさこそ、いちばんの輝きだよ。","自分らしさの迷子","本来の輝き","朝","10分","自分らしい輝きを思い出しながら一日を始めよう。","morning"],
+ ["新しい次元の扉","昨日までの自分にとらわれなくて大丈夫。新しい扉は、もう開きはじめているよ。","過去へのとらわれ","変容・新しい自分","眠る前","20分","昨日の自分へのこだわりを緩め、新しい明日へ。","sleep"]
+];
+
+// 時間帯ごとの誘導文
+const INVITE = {
+  morning:"今日のあなたに必要な周波数を意識しながら、朝の5〜10分、ちなつのヒーリングソングを聴いてみてね☀️ 今日一日、自分らしく過ごすためのお守りに♡",
+  noon:"午前中、ちょっと頑張りすぎてない？午後を始める前の5〜10分、ヒーリングソングで思考をお休みして、自分の内側に戻ってあげてね🌿",
+  night:"潜在意識にしみこみやすい時間として大切にしたい、眠る前のひととき🌙\nなつこのヒーリングサプリを聴きながら\n今日の自分に優しい言葉を届けてあげてね♡"
+};
+const slot = t => /眠る前|夜|入浴後|夕方|仕事終わり/.test(t) ? "night" : /昼/.test(t) ? "noon" : "morning";
+
+const $ = id => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const now = new Date();
+const todayKey = "sfc-" + now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+
+/* カード内の星（固定配置） */
+(()=>{let s=7,r=()=>(s=(s*9301+49297)%233280)/233280,h="";
+  for(let i=0;i<70;i++){const x=r()*200,y=r()*210,z=r();
+    h+= z>.9 ? `<path d="M${x} ${y-3}L${x+.6} ${y-.6}L${x+3} ${y}L${x+.6} ${y+.6}L${x} ${y+3}L${x-.6} ${y+.6}L${x-3} ${y}L${x-.6} ${y-.6}Z" fill="#fff4dc"/>`
+             : `<circle cx="${x}" cy="${y}" r="${(.3+z*.7).toFixed(2)}" fill="#fff" opacity="${(.4+z*.6).toFixed(2)}"/>`;}
+  $("starDots").innerHTML=h;})();
+const use = id => `<use href="#${id}" width="200" height="300"/>`;
+let BACK = `<svg viewBox="0 0 200 300" aria-hidden="true">${use("sSky")}${use("sMoonFeather")}${use("sWaterLotus")}${use("sFrame")}</svg>`;
+let FRONT = `<svg viewBox="0 0 200 300" aria-hidden="true">${use("sSky")}${use("sWaterLotus")}${use("sFrame")}</svg>`;
+// カード画像（card-back.jpg）が一緒に公開されていれば、その絵柄を使う
+const CARD_IMG = "card-back.webp";
+(()=>{const im=new Image();im.onload=()=>{BACK=`<img src="${CARD_IMG}" alt="">`;FRONT=`<img src="${CARD_IMG}" alt="">`;
+  document.querySelectorAll(".card .art").forEach(a=>a.innerHTML=BACK);if($("flipBack").innerHTML)$("flipBack").innerHTML=BACK;};im.src=CARD_IMG;})();
+
+/* 光の粒をはじけさせる */
+function sparkle(el,n=26){
+  if(reduce)return;const r=el.getBoundingClientRect(),cx0=r.left+r.width/2,cy0=r.top+r.height/2;
+  for(let i=0;i<n;i++){const s=document.createElement("span");s.className="spark";s.style.left=cx0+"px";s.style.top=cy0+"px";
+    document.body.appendChild(s);const a=Math.random()*6.283,d=60+Math.random()*Math.max(r.width,120),sz=.6+Math.random()*1.6;
+    s.animate([{transform:`translate(-50%,-50%) scale(${sz})`,opacity:1},{transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d}px)) scale(0)`,opacity:0}],
+      {duration:900+Math.random()*700,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=()=>s.remove();}
+}
+
+/* 背景の星空 */
+const cv=$("stars"),cx=cv.getContext("2d");let stars=[];
+function sizeSky(){const d=devicePixelRatio||1;cv.width=innerWidth*d;cv.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0);
+  stars=Array.from({length:Math.round(innerWidth*innerHeight/3200)},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.3+.2,p:Math.random()*6.28,s:.4+Math.random()*1.2,g:Math.random()>.85}));}
+function drawSky(t){cx.clearRect(0,0,innerWidth,innerHeight);
+  for(const s of stars){cx.globalAlpha=.3+.7*Math.abs(Math.sin(s.p+t*.0006*s.s));cx.fillStyle=s.g?"#f3d9a0":"#f4eeff";cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.283);cx.fill();}
+  if(!reduce)requestAnimationFrame(drawSky);}
+sizeSky();addEventListener("resize",sizeSky);requestAnimationFrame(drawSky);
+
+function show(id){["s-intro","s-choose","s-read"].forEach(s=>$(s).hidden=s!==id);window.scrollTo({top:0});}
+
+const ANG=[-24,-12,0,12,24];
+const fanT = i => `translate(0,0) rotate(${ANG[i]}deg)`;
+
+/* シャッフル → 5枚に広がる */
+function buildFan(){
+  const fan=$("fan");fan.className="fan";fan.innerHTML="";
+  $("chooseLead").innerHTML="今日のあなたのために、カードを混ぜているよ。<br>深呼吸をしながら、待っていてね。";
+  $("hint").textContent="";
+  const TOTAL=11, cards=[];
+  for(let i=0;i<TOTAL;i++){
+    const b=document.createElement("button");b.type="button";b.className="card";b.tabIndex=-1;
+    b.innerHTML=`<div class="art">${BACK}</div>`;b.style.zIndex=i;
+    fan.appendChild(b);cards.push(b);
+  }
+  const done=()=>{
+    cards.slice(5).forEach(b=>b.remove());
+    cards.slice(0,5).forEach((b,i)=>{b.tabIndex=0;b.setAttribute("aria-label",`${i+1}枚目のカードを選ぶ`);b.onclick=()=>choose(b);});
+    fan.classList.add("ready");
+    $("chooseLead").innerHTML="5枚のカードが現れたよ。<br>理由はいらないの。いちばん心が惹かれる一枚に、そっと触れてね。";
+    $("hint").textContent="✦ 一枚を選んでね ✦";
+  };
+  if(reduce){cards.slice(0,5).forEach((b,i)=>b.style.transform=fanT(i));done();return;}
+
+  // ① 山札が左右に分かれては重なる（3回）
+  const D=2600;
+  cards.forEach((b,i)=>{
+    const side=i%2?1:-1,stack=`translate(0,${-i*1.2}px) rotate(0deg)`;
+    const out=`translate(${side*62}%,${-i*1.2-10}px) rotate(${side*9}deg)`;
+    const kf=[{transform:`translate(0,40px) rotate(0deg)`,opacity:0},{transform:stack,opacity:1,offset:.12}];
+    [.24,.42,.6].forEach((o,k)=>{kf.push({transform:out,offset:o});kf.push({transform:`translate(0,${-((i*7+k*3)%TOTAL)*1.2}px) rotate(${(i%3-1)*2}deg)`,offset:o+.09});});
+    kf.push({transform:stack,offset:.88,opacity:1});
+    kf.push(i<5?{transform:stack,opacity:1}:{transform:`translate(0,-6px) scale(.9)`,opacity:0});
+    b.animate(kf,{duration:D,delay:i*35,easing:"ease-in-out",fill:"forwards"});
+  });
+  // ② 5枚が扇のように広がる
+  setTimeout(()=>{
+    cards.slice(0,5).forEach((b,i)=>{
+      b.getAnimations().forEach(a=>a.cancel());
+      b.animate([{transform:`translate(0,${-i*1.2}px) rotate(0deg)`},{transform:`translate(0,-14px) rotate(${ANG[i]*1.15}deg)`,offset:.7},{transform:fanT(i)}],
+        {duration:900,delay:i*90,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"});
+    });
+    cards.slice(5).forEach(b=>b.style.opacity=0);
+    setTimeout(()=>{sparkle(fan,18);done();},900+4*90);
+  },D+TOTAL*35);
+}
+
+/* 選んだ瞬間：ふわっと浮かんで、震えて、光がはじける */
+function choose(b){
+  const fan=$("fan");fan.classList.remove("ready");fan.classList.add("chosen");b.classList.add("pick");
+  $("hint").textContent="";$("chooseLead").innerHTML="あなたのカードが、目を覚ましているよ…";
+  const i=[...fan.children].indexOf(b);
+  const idx=Math.floor(Math.random()*CARDS.length);   // 50枚の意味からランダムに1枚
+  try{localStorage.setItem(todayKey,idx)}catch(e){}
+  if(reduce){reveal(idx,true);return;}
+  [...fan.children].forEach((c,k)=>{ if(c===b)return;
+    c.animate([{transform:fanT(k),opacity:1},{transform:`translate(${(k-i)*40}px,60px) rotate(${ANG[k]*1.6}deg) scale(.85)`,opacity:0}],
+      {duration:800,easing:"ease-in",fill:"forwards"});});
+  b.style.zIndex=20;
+  b.animate([
+    {transform:fanT(i)},
+    {transform:`translate(0,-50px) rotate(0deg) scale(1.15)`,offset:.35},
+    {transform:`translate(0,-50px) rotate(-3deg) scale(1.15)`,offset:.48},
+    {transform:`translate(0,-50px) rotate(3deg) scale(1.15)`,offset:.6},
+    {transform:`translate(0,-50px) rotate(-2deg) scale(1.15)`,offset:.72},
+    {transform:`translate(0,-56px) rotate(0deg) scale(1.2)`}
+  ],{duration:1500,easing:"ease-in-out",fill:"forwards"});
+  setTimeout(()=>sparkle(b,34),700);
+  setTimeout(()=>reveal(idx,true),1700);
+}
+
+function reveal(idx,animate){
+  const [name,msg,weak,up,when,len,line,pl]=CARDS[idx],no=String(idx+1).padStart(2,"0"),p=PLAYLISTS[pl];
+  show("s-read");
+  $("flipBack").innerHTML=BACK;
+  $("flipFront").innerHTML=FRONT+`<div class="face-text"><div class="no">No.${no}</div><div class="nm">${name}</div></div>`;
+  const flip=$("flip");flip.classList.remove("turned");
+  const songUrl = VIDEO_URLS[idx+1] || p.url || (CHANNEL_URL ? CHANNEL_URL.replace(/\/$/,"")+"/videos" : "https://www.youtube.com/results?search_query="+encodeURIComponent(CHANNEL_NAME+" "+p.name));
+  const subUrl  = CHANNEL_URL ? CHANNEL_URL.replace(/\/$/,"")+"?sub_confirmation=1" : "https://www.youtube.com/results?search_query="+encodeURIComponent(CHANNEL_NAME);
+  const shareText=`今日の魂の周波数カードは「${name}」\n${msg}\n#魂の周波数カード #${CHANNEL_NAME}`;
+  $("reading").className="reading";
+  $("reading").innerHTML=`
+    <div class="card-id">SOUL FREQUENCY CARD · No.${no}</div>
+    <h2>${name}</h2>
+    <p class="msg">${msg.replace(/\n/g,"<br>")}</p>
+    <div class="pair">
+      <div class="cell"><h3>乱れやすい周波数</h3><p>${weak}</p></div>
+      <div class="cell up"><h3>活性化したい周波数</h3><p>${up}</p></div>
+    </div>
+    <div class="time">
+      <div class="ttl">今日のヒーリングタイム</div>
+      <div class="pair">
+        <div class="cell"><h3>おすすめの時間帯</h3><p>${when}</p></div>
+        <div class="cell"><h3>おすすめの視聴時間</h3><p>${len}</p></div>
+      </div>
+      <p class="line">${line}</p>
+    </div>
+    <div class="cta">
+      <div class="ttl">今日のあなたにおすすめのヒーリングソング</div>
+      <div class="rec">おすすめ：${when}に${len}　／　${p.name}</div>
+      <a class="btn solid" href="${songUrl}" target="_blank" rel="noopener">ヒーリングサプリを聴く ♡</a>
+      <p class="invite">${INVITE[slot(when)].replace(/\n/g,"<br>")}</p>
+      <div class="rec">動画が長いときは、最初の${len.replace(/^.*〜/,"")}だけ聴いてもOKだよ</div>
+      <a class="btn" href="${subUrl}" target="_blank" rel="noopener">毎日カードを引いて周波数を整えていこう✨</a>
+    </div>
+    <div class="share">
+      <a class="textlink" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">Xでシェア</a>
+      <a class="textlink" href="https://line.me/R/share?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">LINEで送る</a>
+      <button class="textlink" id="copy" type="button">言葉をコピー</button>
+    </div>
+    <div class="toast" id="toast" aria-live="polite"></div>
+    <p class="note">明日の朝、また新しいカードを引きに来てね。</p>
+    <button class="textlink" id="again" type="button">もう一度カードを呼ぶ</button>
+    <p class="note">視聴時間は医学的な治療時間ではなく、無理なく音楽を楽しめる目安です。メッセージや音楽はリラックスや内観のためのもので、効果を保証するものではありません。</p>`;
+  $("copy").onclick=()=>navigator.clipboard.writeText(shareText).then(()=>$("toast").textContent="コピーしたよ",()=>$("toast").textContent="コピーできませんでした");
+  $("again").onclick=()=>{try{localStorage.removeItem(todayKey)}catch(e){}document.body.classList.remove("is-open");show("s-choose");buildFan();};
+  const go=()=>{flip.classList.add("turned");document.body.classList.add("is-open");$("reading").classList.add("show");
+    if(animate)setTimeout(()=>sparkle(flip,40),800);};
+  animate&&!reduce ? setTimeout(go,500) : go();
+}
+
+$("call").addEventListener("click",()=>{show("s-choose");buildFan();});
+
+// いつも表紙から始める。今日すでに引いていたら、表紙に「今日のカードを見る」を出す
+let saved=null;try{saved=localStorage.getItem(todayKey)}catch(e){}
+if(saved!==null&&CARDS[+saved]){
+  const b=document.createElement("button");b.type="button";b.className="textlink";b.textContent="今日引いたカードをもう一度見る";
+  b.onclick=()=>reveal(+saved,false);$("call").after(b);
+}
+</script>
+
+</html>
